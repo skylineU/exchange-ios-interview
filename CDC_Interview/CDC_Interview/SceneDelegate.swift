@@ -4,6 +4,13 @@ import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
+    
+    private let settingService: SettingsService = {
+        let dependency = Dependency.shared
+        let settingService = dependency.resolve(SettingsService.self)
+        return settingService ?? SettingsService()
+    }()
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
@@ -11,18 +18,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        let tabViewController = UITabBarController.init()
+        let tabViewController = UITabBarController()
         
-        let cryptoListView = CryptoListView()
-        let view = UIHostingController(rootView: cryptoListView)
-        view.title = "Price List"
+        let mainView = MainView().environmentObject(settingService)
+        let mainController = UIHostingController(rootView: mainView)
+        mainController.tabBarItem = UITabBarItem(title: "Price List", image: UIImage(systemName: "list.bullet"), selectedImage: UIImage(systemName: "list.bullet.fill"))
         
-        let setting = SettingViewController(rootView: SettingView(viewModel: .init()))
-        setting.title = "Settings"
+        let settingView = SettingsView().environmentObject(settingService)
+        let settingsController = UIHostingController(rootView: settingView)
+        settingsController.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gear"), selectedImage: UIImage(systemName: "gearshape.fill"))
+        
+        let mainNav = UINavigationController(rootViewController: mainController)
+        mainNav.setNavigationBarHidden(true, animated: false)
+        let settingsNav = UINavigationController(rootViewController: settingsController)
+        settingsNav.setNavigationBarHidden(true, animated: false)
         
         tabViewController.viewControllers = [
-            UINavigationController(rootViewController: view),
-            UINavigationController(rootViewController: setting)
+            mainNav,
+            settingsNav
         ]
         window.rootViewController = tabViewController
         

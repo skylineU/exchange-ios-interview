@@ -6,7 +6,8 @@ final class Dependency {
     private var registerMap: [ObjectIdentifier: (Dependency) -> Any] = [:]
     private var resolveMap: [ObjectIdentifier: Any] = [:]
     
-    init() {}
+    private init() {}
+    
     func register<T>(_ type: T.Type, block: @escaping (Dependency) -> T) {
         registerMap[ObjectIdentifier(type)] = block
     }
