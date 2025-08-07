@@ -7,7 +7,9 @@
 
 import XCTest
 import RxSwift
+import RxRelay
 import RxTest
+import Combine
 @testable import CDC_Interview
 
 // MARK: - TestCase
@@ -15,16 +17,19 @@ class TestCase: XCTestCase {
     var disposeBag: DisposeBag!
     var scheduler: TestScheduler!
     var dependency = Dependency.shared
+    var cancellables: Set<AnyCancellable>!
     
     override func setUp() {
         super.setUp()
         disposeBag = DisposeBag()
         scheduler = TestScheduler(initialClock: 0)
+        cancellables = []
     }
     
     override func tearDown() {
         disposeBag = nil
         scheduler = nil
+        cancellables = nil
         super.tearDown()
     }
 }
@@ -93,16 +98,20 @@ class MockNetworkService: NetworkServiceType {
 }
 
 class MockSettingsService: SettingsServiceType, ObservableObject {
-    var supportEUR: Bool = false
-    var settingsChanged: Observable<Void> {
-        return supportEURSubject.asObservable()
+
+    private let supportEURRelay = BehaviorRelay<Bool>(value: false)
+    private let settingsChangeSubject = PublishSubject<Void>()
+    
+    var supportEUR: Bool {
+        get { supportEURRelay.value }
+        set {
+            supportEURRelay.accept(newValue)
+            settingsChangeSubject.onNext(())
+        }
     }
     
-    private let supportEURSubject = PublishSubject<Void>()
-    
-    func setSupportEUR(_ value: Bool) {
-        supportEUR = value
-        supportEURSubject.onNext(())
+    var settingsChanged: Observable<Void> {
+        settingsChangeSubject.asObservable()
     }
 }
 
@@ -111,8 +120,8 @@ struct TestDataFactory {
     static func createCrypto(
         id: Int = 1,
         name: String = "BTC",
-        usdPrice: Decimal? = Decimal(1000),
-        eurPrice: Decimal? = Decimal(900),
+        usdPrice: Decimal? = nil,
+        eurPrice: Decimal? = nil,
         tags: [Tag] = [.deposit]
     ) -> Crypto {
         return Crypto(

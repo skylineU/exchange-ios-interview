@@ -132,15 +132,25 @@ class SettingsServiceTests: TestCase {
         mockSettingsService = MockSettingsService()
     }
     
-    func testSettingsChanged() {
-        let observer = scheduler.createObserver(Void.self)
+    func testSettingsChangeNotification() {
+        let exp = expectation(description: "Should get change event")
         
         mockSettingsService.settingsChanged
-            .subscribe(observer)
+            .subscribe(onNext: {
+                exp.fulfill()
+            })
             .disposed(by: disposeBag)
         
-        mockSettingsService.setSupportEUR(true)
+        mockSettingsService.supportEUR = true
         
-        XCTAssertEqual(observer.events.count, 1)
+        waitForExpectations(timeout: 1)
+    }
+    
+    func testTwoWayBinding() {
+        mockSettingsService.supportEUR = true
+        XCTAssertTrue(mockSettingsService.supportEUR)
+        
+        mockSettingsService.supportEUR = false
+        XCTAssertFalse(mockSettingsService.supportEUR)
     }
 }

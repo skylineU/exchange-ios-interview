@@ -25,11 +25,9 @@ final class MainViewModel: ObservableObject {
     private let settingsService: SettingsServiceType?
     private let disposeBag = DisposeBag()
     
-    init() {
-        let dependency = Dependency.shared
-        self.networkService = dependency.resolve(NetworkService.self)
-        self.settingsService = dependency.resolve(SettingsService.self)
-        
+    init(networkService: NetworkServiceType?, settingsService: SettingsServiceType?) {
+        self.networkService = networkService
+        self.settingsService = settingsService
         setupBindings()
     }
     

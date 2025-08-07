@@ -19,7 +19,7 @@ final class DependencyTests: TestCase {
     }
     
     func testResolveUnregisteredService() {
-        XCTExpectFailure("Unregistered services should trigger fatalError") {
+        XCTExpectFailure("Unregistered service should trigger fatalError") {
             _ = dependency.resolveForTesting(MockSettingsService.self)
         }
     }
