@@ -5,22 +5,31 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
-        Dependency.shared.register(USDPriceUseCase.self) { resolver in
-            return USDPriceUseCase()
-        }
-        
-        Dependency.shared.register(AllPriceUseCase.self) { resolver in
-            return AllPriceUseCase()
-        }
-        
-        Dependency.shared.register(FeatureFlagProvider.self) { resolver in
-            return FeatureFlagProvider()
-        }
-        
+        self.registerDependencies()
         return true
     }
-
+    
+    // Register all dependencies
+    private func registerDependencies() {
+        let dependency = Dependency.shared
+        
+        // Register FileLoader
+        dependency.register(FileLoaderService.self) { _ in
+            FileLoaderService()
+        }
+        
+        // Register NetworkService (dependent on FileLoader)
+        dependency.register(NetworkService.self) { _ in
+            let fileLoader = dependency.resolve(FileLoaderService.self)
+            return NetworkService(fileLoader: fileLoader ?? FileLoaderService())
+        }
+        
+        // Register settings service
+        dependency.register(SettingsService.self) { _ in
+            SettingsService()
+        }
+    }
+    
     // MARK: UISceneSession Lifecycle
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
