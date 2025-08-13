@@ -66,6 +66,7 @@
 		AE5CA4832E43A9E7002DB8A9 /* ServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceTests.swift; sourceTree = "<group>"; };
 		AE5CA4852E43AFB3002DB8A9 /* ViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTests.swift; sourceTree = "<group>"; };
 		AE5CA4872E43B1AD002DB8A9 /* ModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTests.swift; sourceTree = "<group>"; };
+		AEC104B92E4C3A4F00A15A50 /* SUMMARY.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = SUMMARY.md; sourceTree = "<group>"; };
 		AECCB5AE2E4374A40059B597 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		AECCB5B02E4374A40059B597 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		AECCB5B22E4374A40059B597 /* CryptoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoRow.swift; sourceTree = "<group>"; };
@@ -111,6 +112,7 @@
 		1F966FFD2C91A7E1004DB8FD = {
 			isa = PBXGroup;
 			children = (
+				AEC104B92E4C3A4F00A15A50 /* SUMMARY.md */,
 				1F9670362C931640004DB8FD /* README.md */,
 				1F9670082C91A7E1004DB8FD /* CDC_Interview */,
 				1FBEC5A12C940DE300732A9C /* CDC_InterviewTests */,
